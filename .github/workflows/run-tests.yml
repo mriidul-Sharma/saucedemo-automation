@@ -3,7 +3,7 @@ name: SauceDemo QA Automation CI
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   test:
@@ -23,11 +23,20 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install requests
 
       - name: Run Pytest in Headless Chrome
         run: |
           mkdir -p reports
           pytest -v --junitxml=reports/test-results.xml
+
+      - name: Report Results to Jira
+        if: always()
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        run: |
+          python scripts/report_to_jira.py
 
       - name: Upload Test Report Artifact
         if: always()
