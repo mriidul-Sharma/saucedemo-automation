@@ -53,7 +53,6 @@ def parse_and_report():
         issue_key = TEST_MAPPING.get(test_name)
         if issue_key:
             comment = (
-                f"[Automated QA Run - GitHub Actions]\n"
                 f"Test: {test_name}\n"
                 f"Status: {status}\n"
                 f"Details: {details}\n"
